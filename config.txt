@@ -1,0 +1,2 @@
+board : own_board.png
+pieces : basic.png
