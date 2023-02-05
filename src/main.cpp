@@ -8,12 +8,17 @@
 #include "chessboard.h"
 #include "display.h"
 #include "constants.h"
+#include "possible_moves.h"
 #include "move_piece.h"
 
 #pragma region variables
 
+//Config
+extern Config config{ "config.txt" };
+
 //Texture
 sf::Texture tex_board{};
+sf::Texture tex_next{};
 
 sf::Texture tex_wrook{};
 sf::Texture tex_wknight{};
@@ -31,6 +36,7 @@ sf::Texture tex_bpawn{};
 
 //Piece managment
 sf::Vector2i cursor_coord;
+
 #pragma endregion variables
 
 
@@ -46,7 +52,8 @@ int main()
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "Test");
     sf::Event e;
 
-    Config config{ "config.txt" };
+
+    //config.print();
 
     //Loading sprites
     if (!tex_board.loadFromFile(config.board)) {
@@ -54,8 +61,13 @@ int main()
     }
     sprites.board.setTexture(tex_board);
 
+    if (!tex_next.loadFromFile(config.help)) {
+        throw std::runtime_error("Couldn't open help_img texture\n");
+    }
+    sprites.help.setTexture(tex_next);
+
     if (!tex_wking.loadFromFile(config.pieces, sf::IntRect(0 * SQUARE_WIDTH, 0 * SQUARE_WIDTH, SQUARE_WIDTH, SQUARE_WIDTH))) {
-        throw std::runtime_error("Couldn't open board texture\n");
+        throw std::runtime_error("Couldn't open pieces texture\n");
     }
     sprites.wking.setTexture(tex_wking);
     tex_wqueen.loadFromFile(config.pieces, sf::IntRect(1 * SQUARE_WIDTH, 0 * SQUARE_WIDTH, SQUARE_WIDTH, SQUARE_WIDTH));
@@ -94,6 +106,7 @@ int main()
     Color current_player = Color::White;
 
     MovePiece move_piece{};
+    PossibleMoves possible_moves{};
 
     while (window.isOpen()) {
         
@@ -111,18 +124,26 @@ int main()
                 int y{ cursor_coord.x / SQUARE_WIDTH };
 
                 if ((-1 < x && x < N_ROW) && (-1 < y && y < N_ROW)) {
+
                     if (move_piece.is_empty && board.is_piece({ x, y })) {
                         if (current_player == board.get_color({ x, y })) {
                             move_piece.from = { x, y };
                             move_piece.is_empty = false;
+                            if (config.need_help) {
+                                std::cout << "bonjour";
+                                possible_moves.get_all(board, move_piece.from);
+                                std::cout << "bondoir";
+                            }
+
                         }
                     }
 
                     else if (!move_piece.is_empty) {
-                        if (board.is_piece({ x, y })) {
-                            if (board.get_color({ x, y }) == board.get_color(move_piece.from)) {
-                                move_piece.from = { x, y };
-                            }
+                        if (board.is_piece({ x, y }) && (board.get_color({ x, y }) == board.get_color(move_piece.from)) ) {
+                            move_piece.from = { x, y };
+
+                            possible_moves.clear();
+                            possible_moves.get_all(board, move_piece.from);
                         }
                         else {
                             move_piece.to = { x, y };
@@ -133,18 +154,15 @@ int main()
                                 current_player = (current_player == Color::White ? Color::Black : Color::White);
 
                                 move_piece.reinitialize();
+                                possible_moves.clear();
                             }
                         }
-                    }
-                    else {
-                        
                     }
                 }
 
                 
                 
                 std::cout << "From : (" << move_piece.from.x << ", " << move_piece.from.y << ")\n";
-                std::cout << "To   : (" << move_piece.to.x << ", " << move_piece.to.y << ")\n";
                 std::cout << std::endl;
             }
 
@@ -157,8 +175,11 @@ int main()
 
 
 
-        window.draw(sprites.board);
-        display.board(window, board, sprites);
+        display.board(window, sprites);
+        if (config.need_help) {
+            display.help(window, possible_moves, sprites);
+        }
+        display.pieces(window, board, sprites);
         window.display();
         window.clear();
 

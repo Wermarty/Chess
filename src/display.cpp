@@ -1,12 +1,15 @@
+#include <vector>
+
 #include "display.h"
 #include "SFML/Graphics.hpp"
 #include "sprites.h"
 #include "coord.h"
 #include "sprites.h"
+#include "possible_moves.h"
 
 
 
-void Display::piece(const Piece& piece, Coord coord, sf::RenderWindow& window, Sprites& sprites) {
+void piece(const Piece& piece, Coord coord, sf::RenderWindow& window, Sprites& sprites) {
 	if (piece.color == Color::White) {
 		switch (piece.type) {
 		case PieceType::King:
@@ -66,13 +69,22 @@ void Display::piece(const Piece& piece, Coord coord, sf::RenderWindow& window, S
 }
 
 
-void Display::board(sf::RenderWindow& window, const Chessboard& board, Sprites& sprites) {
+void Display::board(sf::RenderWindow& window, Sprites& sprites) {
 	window.draw(sprites.board);
-	
+}
+
+void Display::help(sf::RenderWindow& window, const PossibleMoves& possible_moves, Sprites& sprites) {
+	for (const Coord next_move : possible_moves.possible_moves) {
+		sprites.help.setPosition(static_cast<float>(next_move.y * SQUARE_WIDTH), static_cast<float>(next_move.x * SQUARE_WIDTH));
+		window.draw(sprites.help);
+	}
+}
+
+void Display::pieces(sf::RenderWindow& window, const Chessboard& board, Sprites& sprites) {
 	for (int i{ 0 }; i < N_ROW; i++) {
 		for (int j{ 0 }; j < N_COL; j++) {
-			if (board.is_piece({i, j})) {
-				piece(board.get_piece({i, j}), {i, j}, window, sprites);
+			if (board.is_piece({ i, j })) {
+				piece(board.get_piece({ i, j }), { i, j }, window, sprites);
 			}
 		}
 	}

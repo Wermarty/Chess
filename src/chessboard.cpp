@@ -37,6 +37,12 @@ bool Chessboard::is_piece(const Coord& coord) const{
 	return board.at(coord.x).at(coord.y).has_value();
 }
 
+
+bool Chessboard::is_piece_and_dif_color(const MovePiece& move_piece) const {
+	return (board.at(move_piece.to.x).at(move_piece.to.y).has_value() &&
+		board.at(move_piece.to.x).at(move_piece.to.y).value().color != board.at(move_piece.from.x).at(move_piece.from.y).value().color);
+}
+
 Piece Chessboard::get_piece(const Coord& coord) const {
 	return board.at(coord.x).at(coord.y).value();
 }
@@ -52,15 +58,9 @@ Chessboard Chessboard::update(const MovePiece& move_piece) {
 	Chessboard new_board{};
 	new_board.board = board;
 
+	new_board.board.at(move_piece.to.x).at(move_piece.to.y) = new_board.get_piece(move_piece.from);
 
-	if (move_piece.is_possible(new_board)) {
-
-		new_board.board.at(move_piece.to.x).at(move_piece.to.y) = new_board.get_piece(move_piece.from);
-
-		new_board.board.at(move_piece.from.x).at(move_piece.from.y).reset();
-	}
-
-
+	new_board.board.at(move_piece.from.x).at(move_piece.from.y).reset();
 
 	return new_board;
 }

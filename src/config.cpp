@@ -7,7 +7,7 @@
 
 Config::Config(const std::string& config_file) {
 	
-	std::ifstream config{ "config.txt", std::ios::in };
+	std::ifstream config{ config_file, std::ios::in };
 
 	if (!config.good()) {
 		throw std::runtime_error("Couldn't open config file\n");
@@ -26,8 +26,23 @@ Config::Config(const std::string& config_file) {
 		if (temp_type == "board") {
 			board = path;
 		}
-		else {
+		else if (temp_type == "pieces") {
 			pieces = path;
 		}
+		else if (temp_type == "help") {
+			if (temp_name == "true") {
+				need_help = true;
+			}
+		}
+		else if (temp_type == "help_img") {
+			help = path;
+		}
 	}
+}
+
+
+void Config::print() const {
+	std::cout << "board  : " << board << std::endl;
+	std::cout << "pieces : " << pieces << std::endl;
+	std::cout << "next   : " << help << std::endl << std::endl;
 }
