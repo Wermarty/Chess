@@ -20,7 +20,8 @@ struct Chessboard {
 	Chessboard();
 
 	bool is_piece(const Coord& coord) const;
-	bool is_piece_and_dif_color(const MovePiece& move_piece) const;
+	bool is_friend(const Coord& from, const Coord& to) const;
+	bool is_enemy(const Coord& from, const Coord& to) const;
 	Color get_color(const Coord& coord) const;
 	Piece get_piece(const Coord& coord) const;
 	Chessboard update(const MovePiece& move_piece);

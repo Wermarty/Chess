@@ -5,6 +5,7 @@
 
 #include "coord.h"
 #include "chessboard.h"
+#include "direction.h"
 
 struct PossibleMoves {
 
@@ -22,6 +23,7 @@ private:
 	void possible_mov_queen (const Chessboard& board, const Coord& from);
 	void possible_mov_king  (const Chessboard& board, const Coord& from);
 
+	void line(const Chessboard& board, const Coord& from, const Direction& dir);
 
 public:
 	std::vector<Coord> possible_moves{};
