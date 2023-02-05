@@ -1,2 +1,4 @@
 board : own_board.png
 pieces : basic.png
+help : true
+help_img : help_img.png
