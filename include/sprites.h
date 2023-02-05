@@ -6,6 +6,7 @@
 
 struct Sprites {
     sf::Sprite board;
+    sf::Sprite help;
 
     sf::Sprite bking;
     sf::Sprite bqueen;

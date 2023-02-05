@@ -20,6 +20,7 @@ struct Chessboard {
 	Chessboard();
 
 	bool is_piece(const Coord& coord) const;
+	bool is_piece_and_dif_color(const MovePiece& move_piece) const;
 	Color get_color(const Coord& coord) const;
 	Piece get_piece(const Coord& coord) const;
 	Chessboard update(const MovePiece& move_piece);
