@@ -38,9 +38,12 @@ bool Chessboard::is_piece(const Coord& coord) const{
 }
 
 
-bool Chessboard::is_piece_and_dif_color(const MovePiece& move_piece) const {
-	return (board.at(move_piece.to.x).at(move_piece.to.y).has_value() &&
-		board.at(move_piece.to.x).at(move_piece.to.y).value().color != board.at(move_piece.from.x).at(move_piece.from.y).value().color);
+bool Chessboard::is_friend(const Coord& from, const Coord& to) const {
+	return (is_piece(to) && (get_color(from) == get_color(to)));
+}
+
+bool Chessboard::is_enemy(const Coord& from, const Coord& to) const {
+	return !(is_piece(to) && (get_color(from) != get_color(to)));
 }
 
 Piece Chessboard::get_piece(const Coord& coord) const {

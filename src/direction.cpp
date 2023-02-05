@@ -15,5 +15,17 @@ Direction::Direction(Dir dir) {
 	case Dir::Right:
 		x = 0; y = 1;
 		break;
+	case Dir::U_L:
+		x = -1; y = -1;
+		break;
+	case Dir::U_R:
+		x = -1; y = 1;
+		break;
+	case Dir::D_L:
+		x = 1; y = -1;
+		break;
+	case Dir::D_R:
+		x = 1; y = 1;
+		break;
 	}
 }

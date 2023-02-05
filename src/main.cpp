@@ -147,7 +147,7 @@ int main()
                         }
                         else {
                             move_piece.to = { x, y };
-                            if (move_piece.is_possible(board)) {
+                            if ( (config.need_help ? possible_moves.contain(move_piece.to) : move_piece.is_possible(board)) ) {
 
                                 game.emplace_back(board.update(move_piece));
                                 board = game.back();
